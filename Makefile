@@ -3,9 +3,11 @@ PREFIX ?= $(HOME)
 NPMRC := $(PREFIX)/.npmrc
 LOCAL_BIN := $(PREFIX)/.local/bin
 
-.PHONY: install uninstall check show
+.PHONY: install install-config uninstall uninstall-config check show
 
-install:
+install: install-config
+
+install-config:
 	mkdir -p "$(LOCAL_BIN)"
 	@if [ -e "$(NPMRC)" ] && ! cmp -s .npmrc "$(NPMRC)"; then \
 		backup="$(NPMRC).bak.$$(date +%Y%m%d%H%M%S)"; \
@@ -16,7 +18,9 @@ install:
 	@echo "Installed .npmrc to $(NPMRC)"
 	@echo 'Make sure $$HOME/.local/bin is in PATH.'
 
-uninstall:
+uninstall: uninstall-config
+
+uninstall-config:
 	@if [ -f "$(NPMRC)" ] && cmp -s .npmrc "$(NPMRC)"; then \
 		rm "$(NPMRC)"; \
 		echo "Removed $(NPMRC)"; \
